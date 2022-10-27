@@ -1,7 +1,10 @@
 package com.byhuang.socket;
 
-import java.net.*;
 import java.io.*;
+import java.net.*;
+import java.util.stream.Stream;
+
+
 /**
  * @author mskj-huangbingyi
  * @version 1.0
@@ -10,68 +13,43 @@ import java.io.*;
  */
 
 public class Client {
-    // initialize socket and input output streams
-    private Socket socket		 = null;
-    private DataInputStream input = null;
-    private DataOutputStream out	 = null;
 
-    // constructor to put ip address and port
-    public Client(String address, int port)
-    {
-        // establish a connection
-        try
-        {
-            socket = new Socket(address, port);
-            System.out.println("Connected");
+    public static void main(String[] args) throws IOException {
 
-            // takes input from terminal
-            input = new DataInputStream(System.in);
+        Socket socket = null;
 
-            // sends output to the socket
-            out = new DataOutputStream(socket.getOutputStream());
-        }
-        catch(UnknownHostException u)
-        {
-            System.out.println(u);
-        }
-        catch(IOException i)
-        {
-            System.out.println(i);
+        BufferedReader bufferedReader = null;
+
+        DataOutputStream outputStream = null;
+
+        try {
+            socket = new Socket("127.0.0.1", 2000);
+            System.out.println("Connected...");
+            bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+            outputStream = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        // string to read message from input
         String line = "";
 
-        // keep reading until "Over" is input
-        while (!line.equals("Over"))
-        {
-            try
-            {
-                line = input.readLine();
-                out.writeUTF(line);
-            }
-            catch(IOException i)
-            {
-                System.out.println(i);
+        while (! "Over".equals(line)) {
+            try {
+                line = bufferedReader.readLine();
+                outputStream.writeUTF(line);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
-        // close the connection
-        try
-        {
-            input.close();
-            out.close();
+        try {
+            bufferedReader.close();
+            outputStream.close();
             socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch(IOException i)
-        {
-            System.out.println(i);
-        }
-    }
-
-    public static void main(String args[])
-    {
-        Client client = new Client("127.0.0.1", 5000);
+        System.out.println("client finished visiting...");
     }
 }
 
