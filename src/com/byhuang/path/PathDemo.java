@@ -12,7 +12,9 @@ import java.nio.file.Paths;
 public class PathDemo {
 
     public static void main(String[] args) {
-        Path path = Paths.get("G:\\testFile\\test01.txt");
+        Path path = Paths.get("../pipe/PipeDemo.java");
+        Path path1 = path.toAbsolutePath();
         System.out.println(path);
+        System.out.println(path1);
     }
 }
